@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/main_screen.dart';
 
-import 'package:fernandes_joel_movie_explorer/models/movie.dart';
-import 'package:fernandes_joel_movie_explorer/services/tmdb_service.dart';
-import 'package:fernandes_joel_movie_explorer/widgets/movie_card.dart';
-
 //Point d'entrée de l'application
 void main() {
   runApp(const MovieExplorerApp());
