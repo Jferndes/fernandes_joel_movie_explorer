@@ -7,11 +7,9 @@ class TmdbService {
   static const String _baseUrl = 'https://api.themoviedb.org/3';
   static const String _jwtToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyNmM5YzRjZTcxMDk4OTdiYmMyYmNmM2M4MzdkMTJjMCIsIm5iZiI6MTc3MzkzMzgwOS4xNTI5OTk5LCJzdWIiOiI2OWJjMTRmMTFkZWExYTFjNjUwMGY0ZTciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.7tzr5afRix77f2wpUnh6yF28QleZV0qWjxHCw9UZTJw';
 
-
+  //Récupérer les films pour la liste du menu principal
   Future<List<Movie>> fetchPopularMovies({int page = 1}) async {
-    final uri = Uri.parse(
-      '$_baseUrl/movie/popular?language=fr-FR&page=$page',
-    );
+    final uri = Uri.parse('$_baseUrl/movie/popular?language=fr-FR&page=$page',);
 
     final response = await http.get(
       uri,
