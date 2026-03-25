@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fernandes_joel_movie_explorer/models/movie.dart';
 import 'package:fernandes_joel_movie_explorer/services/tmdb_service.dart';
 import 'package:fernandes_joel_movie_explorer/widgets/movie_card.dart';
+import 'package:fernandes_joel_movie_explorer/screens/movie_detail_screen.dart';
 
 //Ecran d'acceuil : listes des films
 class HomeScreen extends StatefulWidget {
@@ -49,7 +50,15 @@ class _HomeScreenState extends State<HomeScreen> {
         separatorBuilder: (context, index) => Divider(), 
         itemBuilder: (context, index) {
           final movie = movies[index];
-          return MovieCard(movie: movie);
+          return MovieCard(
+            movie: movie,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MovieDetailScreen(movie: movie)),
+              );
+            }
+          );
         },
       ),
       
