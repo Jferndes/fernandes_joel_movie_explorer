@@ -15,7 +15,7 @@ class MovieExplorerApp extends StatelessWidget {
     return MaterialApp(
       title: 'Movie Explorer',
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const MainScreen(),
     );

@@ -15,18 +15,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Movie> movies = [];
   final TmdbService _tmdbService = TmdbService();
+  int _currentPage = 1;
 
   @override
   void initState() {
     super.initState();
-    _fetchMovies();
+    _fetchMovies(_currentPage);
   }
 
-  Future<void> _fetchMovies() async {
+  Future<void> _fetchMovies(int page) async {
     try {
-      final fetchedMovies = await _tmdbService.fetchPopularMovies(page: 2);
-       setState(() {
+      final fetchedMovies = await _tmdbService.fetchPopularMovies(page: page);
+      setState(() {
         movies = fetchedMovies;
+        _currentPage = page;
       });
     } catch (e) {
       print(e.toString());
@@ -48,7 +50,28 @@ class _HomeScreenState extends State<HomeScreen> {
         itemBuilder: (context, index) {
           final movie = movies[index];
           return MovieCard(movie: movie);
-        }
+        },
+      ),
+      
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: (_currentPage > 1) ? () => _fetchMovies(_currentPage - 1) : null,
+                child: const Text('Précédent'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () => _fetchMovies(_currentPage + 1),
+                child: const Text('Suivant'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
