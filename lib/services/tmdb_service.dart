@@ -24,9 +24,32 @@ class TmdbService {
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       final results = data['results'] as List<dynamic>;
       return results.map((item) => Movie.fromJson(item as Map<String, dynamic>)).toList();
+    }else{
+      throw Exception('Erreur HTTP: ${response.statusCode}');
     }
+  }
+  
+  // Recherche de films par mot clé
+  Future<List<Movie>> searchMovies(String query, {int page = 1}) async {
+    final uri = Uri.parse('$_baseUrl/search/movie?language=fr-FR&query=$query&page=$page');
 
-    throw Exception('Erreur HTTP: ${response.statusCode}');
+    final response = await http.get(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $_jwtToken'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final results = data['results'] as List<dynamic>;
+      return results.map((item) => Movie.fromJson(item as Map<String, dynamic>)).toList();
+    }else{
+      throw Exception('Erreur HTTP: ${response.statusCode}');
+    }
+    
   }
 
 }
