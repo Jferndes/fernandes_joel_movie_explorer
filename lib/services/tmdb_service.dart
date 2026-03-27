@@ -10,7 +10,7 @@ class TmdbService {
   //Récupérer les films pour la liste du menu principal
   Future<List<Movie>> fetchPopularMovies({int page = 1}) async {
     final uri = Uri.parse('$_baseUrl/movie/popular?language=fr-FR&page=$page',);
-
+    
     final response = await http.get(
       uri,
       headers: {
@@ -25,7 +25,9 @@ class TmdbService {
       final results = data['results'] as List<dynamic>;
       return results.map((item) => Movie.fromJson(item as Map<String, dynamic>)).toList();
     }else{
-      throw Exception('Erreur HTTP: ${response.statusCode}');
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      print(data['status_message']);
+      throw Exception('Erreur HTTP: ${data['status_message']}');
     }
   }
   

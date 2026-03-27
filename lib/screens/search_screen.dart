@@ -17,6 +17,8 @@ class _SearchScreenState extends State<SearchScreen> {
   final TmdbService _tmdbService = TmdbService();
   final TextEditingController _searchController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+  String? _errorMessage;
 
   List<Movie> searchResults = [];
   bool hasSearched = false;
@@ -31,16 +33,28 @@ class _SearchScreenState extends State<SearchScreen> {
     if (query.trim().isEmpty) return;
 
     setState(() {
+      _isLoading = true;
       hasSearched = true;
+      _errorMessage = null;
     });
 
     try {
       final results = await _tmdbService.searchMovies(query);
       setState(() {
         searchResults = results;
+        _isLoading = false;
       });
     } catch (e) {
-      print('Erreur: ${e.toString()}');
+      setState(() {
+        _errorMessage = 'Erreur lors du chargement: Veillez réssayer';
+        _isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text(_errorMessage!)),
+        );
     }
   }
 
@@ -51,12 +65,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rechercher'),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
-      ),
       body: Column(
         children: [
           Padding(
@@ -101,14 +116,12 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          // Résultats de recherche
           Expanded(child: _buildResults()),
         ],
       ),
     );
   }
 
-  /// Construit les résultats selon l'état
   Widget _buildResults() {
 
     if (!hasSearched) {
@@ -116,7 +129,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.movie_filter, size: 64, color: Colors.grey),
+            Icon(Icons.movie, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Recherchez vos films préférés', style: TextStyle(fontSize: 16, color: Colors.grey)),
           ],
